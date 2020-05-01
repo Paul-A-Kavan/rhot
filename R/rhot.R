@@ -108,6 +108,8 @@ rhot <- function(elementId,
 #'
 #'
 # this sets settigns that pertain to a single column in the column list
+#'
+#' @export
 hot_column <-
   function(hot,
            columnId, # null not allowed, if you want whole table then use hot_table
@@ -184,6 +186,8 @@ hot_column <-
 #'
 # set the settings that only apply to a single cell.
 # note that cell settings override table and column settings
+#'
+#' @export
 hot_cell <- function(hot,
                      rowId = NULL,
                      columnId = NULL,
@@ -248,6 +252,8 @@ hot_cell <- function(hot,
 #' @param validate_upon_creation  something to validate the initial data
 #' @param ... passed onto handsontable as table-level settings.
 #'
+#'#'
+#' @export
 hot_table <-
   function(hot,
            autoColumnSize = NULL,
@@ -320,6 +326,8 @@ hot_table <-
 #' @param menu TRUE or FALSE to add a menu to the table. Defaults is TRUE in this function but note that the table itself defaults the context menu to FALSE.
 #' @param moreparams
 #'
+#'
+#' @export
 hot_menu <-
   function(hot,
            menu = TRUE,
@@ -340,6 +348,8 @@ hot_menu <-
 #'
 #' @param hot
 #'
+#'#'
+#' @export
 hot_style <-
   function(
     hot,

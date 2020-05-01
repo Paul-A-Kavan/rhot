@@ -4,16 +4,39 @@
 \alias{hot_column}
 \title{Set column-level settings.}
 \usage{
-hot_column(hot, columnId, returnType = NULL, allowInvalid = NULL,
-  copyable = NULL, copyPaste = NULL, correctFormat = NULL,
-  dateFormat = NULL, defaultDate = NULL, editor = NULL,
-  filter = NULL, filteringCaseSensitive = NULL, label = NULL,
-  numericFormat = NULL, placeholder = NULL, readOnly = NULL,
-  renderer = NULL, selectOptions = NULL, skipColumnOnPaste = NULL,
-  source = NULL, strict = NULL, title = NULL, trimDropdown = NULL,
-  trimWhitespace = NULL, type = NULL, validator = NULL,
-  visibleRows = NULL, wordWrap = NULL, halign = NULL,
-  valign = NULL, ...)
+hot_column(
+  hot,
+  columnId,
+  returnType = NULL,
+  allowInvalid = NULL,
+  copyable = NULL,
+  copyPaste = NULL,
+  correctFormat = NULL,
+  dateFormat = NULL,
+  defaultDate = NULL,
+  editor = NULL,
+  filter = NULL,
+  filteringCaseSensitive = NULL,
+  label = NULL,
+  numericFormat = NULL,
+  placeholder = NULL,
+  readOnly = NULL,
+  renderer = NULL,
+  selectOptions = NULL,
+  skipColumnOnPaste = NULL,
+  source = NULL,
+  strict = NULL,
+  title = NULL,
+  trimDropdown = NULL,
+  trimWhitespace = NULL,
+  type = NULL,
+  validator = NULL,
+  visibleRows = NULL,
+  wordWrap = NULL,
+  halign = NULL,
+  valign = NULL,
+  ...
+)
 }
 \arguments{
 \item{hot}{The Handsontable object created by rhot().}

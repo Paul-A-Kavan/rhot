@@ -4,24 +4,52 @@
 \alias{hot_table}
 \title{Set table-level settings.}
 \usage{
-hot_table(hot, autoColumnSize = NULL, autoRowSize = NULL,
-  autoWrapCol = NULL, autoWrapRow = NULL, colHeaders = NULL,
-  columnHeaderHeight = NULL, colWidths = NULL, dragToScroll = NULL,
-  enterMoves = NULL, fixedColumnsLeft = NULL, fixedRowsBottom = NULL,
-  fixedRowsTop = NULL, fragmentSelection = NULL, language = NULL,
-  manualColumnFreeze = NULL, manualColumnMove = NULL,
-  manualColumnResize = NULL, manualRowMove = NULL,
-  manualRowResize = NULL, maxCols = NULL, maxRows = NULL,
-  mergeCells = NULL, minCols = NULL, minRows = NULL,
-  observeDOMVisibility = NULL, outsideClickDeselects = NULL,
-  rowHeaders = NULL, rowHeaderWidth = NULL, rowHeights = NULL,
-  search = NULL, selectionMode = NULL, stretchH = "none",
-  tabMoves = NULL, undo = NULL, validate_upon_creation = NULL, ...)
+hot_table(
+  hot,
+  autoColumnSize = NULL,
+  autoRowSize = NULL,
+  autoWrapCol = NULL,
+  autoWrapRow = NULL,
+  colHeaders = NULL,
+  columnHeaderHeight = NULL,
+  colWidths = NULL,
+  dragToScroll = NULL,
+  enterMoves = NULL,
+  fixedColumnsLeft = NULL,
+  fixedRowsBottom = NULL,
+  fixedRowsTop = NULL,
+  fragmentSelection = NULL,
+  language = NULL,
+  manualColumnFreeze = NULL,
+  manualColumnMove = NULL,
+  manualColumnResize = NULL,
+  manualRowMove = NULL,
+  manualRowResize = NULL,
+  maxCols = NULL,
+  maxRows = NULL,
+  mergeCells = NULL,
+  minCols = NULL,
+  minRows = NULL,
+  observeDOMVisibility = NULL,
+  outsideClickDeselects = NULL,
+  rowHeaders = NULL,
+  rowHeaderWidth = NULL,
+  rowHeights = NULL,
+  search = NULL,
+  selectionMode = NULL,
+  stretchH = "none",
+  tabMoves = NULL,
+  undo = NULL,
+  validate_upon_creation = NULL,
+  ...
+)
 }
 \arguments{
 \item{validate_upon_creation}{something to validate the initial data}
 
-\item{...}{passed onto handsontable as table-level settings.}
+\item{...}{passed onto handsontable as table-level settings.
+
+#'}
 }
 \description{
 Set table-level settings.

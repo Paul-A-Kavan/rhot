@@ -7,7 +7,7 @@
 hot_style(hot, someClassSettings = NULL)
 }
 \arguments{
-\item{hot}{}
+\item{hot}{#'}
 }
 \description{
 Change the defualt classes that are used for styling the table. Also, add custom borders to the table.

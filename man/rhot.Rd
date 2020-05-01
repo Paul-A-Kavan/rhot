@@ -4,8 +4,7 @@
 \alias{rhot}
 \title{<Add Title>}
 \usage{
-rhot(elementId, data, width = "auto", height = "auto",
-  overflow = "hidden")
+rhot(elementId, data, width = "auto", height = "auto", overflow = "hidden")
 }
 \arguments{
 \item{elementId}{The id given to the widget.}

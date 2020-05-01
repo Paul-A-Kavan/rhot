@@ -4,8 +4,7 @@
 \alias{hot_cell}
 \title{Set cell-level settings.}
 \usage{
-hot_cell(hot, rowId = NULL, columnId = NULL, readOnly = NULL,
-  comment = NULL)
+hot_cell(hot, rowId = NULL, columnId = NULL, readOnly = NULL, comment = NULL)
 }
 \arguments{
 \item{comment}{Either a character matrix or a character vector. If character matrix then rowId and columnId are disregarded. Comments are passed at the cell-level to the cell object.}

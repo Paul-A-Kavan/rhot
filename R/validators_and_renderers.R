@@ -2,9 +2,15 @@
 
 
 
-#### VALIDATORS ####
 # the validator and renderer function will return the JS wrapped strings and get
 # passed into the hot_column call
+#### VALIDATORS ####
+
+
+#' Register a custom validator with Handsontable
+#'
+#'
+#' @export
 register_validator_numeric <- function(hot,
                                        name,
                                        max_value = NULL,
@@ -40,6 +46,10 @@ register_validator_numeric <- function(hot,
   return(hot)
 }
 
+#' Register a custom validator with Handsontable
+#'
+#'
+#' @export
 register_validator_character <- function(hot,
                                          name) {
   # TODO
@@ -125,6 +135,11 @@ register_validator_custom <- function(hot,
 
 
 #### RENDERERS ####
+
+#' Register a custom validator with Handsontable
+#'
+#'
+#' @export
 register_renderer_heatmap <- function(hot,
                                       min_value = 0,
                                       max_value = 1,
@@ -147,9 +162,12 @@ register_renderer_heatmap <- function(hot,
     ",
       .open = "{*{", .close = "}*}"
     ))
-  }
+}
 
-
+#' Register a custom validator with Handsontable
+#'
+#'
+#' @export
 register_renderer_custom <-  function(hot, name, jsFunction) {
   if ( is.null(jsFunction) )
     # if null we default to the base renderer to protect the user
