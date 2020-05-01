@@ -1,28 +1,90 @@
 HTMLWidgets.widget({
-
   name: 'rhot',
-
   type: 'output',
 
+
   factory: function(el, width, height) {
+    // create the afterChange hook function to be registered further down
+    var afterChange_function = function(changes, source) {
+          if( !HTMLWidgets.shinyMode ) return;
+          var robj = {'changes':changes, 'source':source};
+          Shiny.onInputChange(el.id + '_afterChange', robj);
+        };
+    // the blank hook function also
+    var myhook_function = function(changes, source) {
+          if( !HTMLWidgets.shinyMode ) return;
+          var robj = {'changes':changes, 'source':source};
+          Shiny.onInputChange(el.id + '_afterChange', robj);
+        };
 
-    // TODO: define shared variables for this instance
 
+
+    // #### RENDERING FUNCTION ####
+    renFunc = function(x) {
+      // use the parent element to control widget sizing
+      // but don't pass theses on to the constructor
+      el.style.overflow = x.sizeInfo.overflow;
+      el.style.height = x.sizeInfo.height;
+      el.style.width = x.sizeInfo.width;
+      delete x.sizeInfo;
+
+      el.hot = new Handsontable(el, x);
+
+
+      Handsontable.hooks.add('afterChange', afterChange_function, el.hot);
+      Handsontable.hooks.add('myhook', myhook_function, el.hot);
+
+      //el.hot.render();
+    };
+
+    // resizing function
+    resFunc = function(width, height) {
+      console.log('Entered resizing function.');
+      console.log(this);
+      //console.log(this.hot.getSettings('columns'));
+
+      this.width = width;
+      this.height = height;
+      //this.hot.render();
+    };
+
+    // wwe want all these callbacks set upon initialization of the widget
+    // so we bundle them into one function. each one will get called with hot
+   /* setup_callbacks = function(hot){
+      // these should only get set for a shiny widget
+      console.log(HTMLWidgets.shinyMode);
+
+      if( !HTMLWidgets.shinyMode ){ return }
+
+      hot.afterChange = function(changes, source){
+        // there are many ways this can be triggered
+        // for now i only want to react if its an "edit" event
+        console.log(changes);
+        console.log(source);
+        if ( source == 'edit' ){
+
+        }
+      };
+    };
+*/
+
+
+    // return object full of all our code for the widget
     return {
-
-      renderValue: function(x) {
-
-        // TODO: code to render the widget, e.g.
-        el.innerText = x.message;
-
-      },
-
-      resize: function(width, height) {
-
-        // TODO: code to re-render the widget with a new size
-
-      }
-
+      renderValue: renFunc,
+      resize: resFunc
     };
   }
+  // end factory
+
 });
+
+
+
+    /*  // there are several plugins; for cleanliness I get their references here
+      var manualColumnResizePlugin = hot.getPlugin('manualColumnResize');
+      var columnSortingPlugin = hot.getPlugin('columnSorting');
+      if( x.manualColumnResize )
+        manualColumnResizePlugin.enablePlugin();
+      columnSortingPlugin.enablePlugin();
+    */
