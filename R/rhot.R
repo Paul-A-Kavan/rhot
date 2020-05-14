@@ -42,7 +42,7 @@ rhot <- function(elementId,
   # preset all the column types to text with no other defaults
   for(i in 1:ncol(data)){
     hot$x$columns[[i]]$data = cnames[i]
-    hot$x$columns[[i]]$title = cnames[i]
+    # hot$x$columns[[i]]$title = cnames[i]
     hot$x$columns[[i]]$type = 'text'
     hot$x$columns[[i]]$returnType = rtypes[i]
   }
@@ -100,7 +100,10 @@ hot_cell <- function(hot,
 #' @param autoRowSize
 #' @param autoWrapCol
 #' @param autoWrapRow
-#' @param colHeaders
+#' @param colHeaders Accepts T/F to turn colHeaders on or off.
+#' By default the library has colHeaders turned on and set to the column names of the provided dataframe.
+#' To set all colHeaders at once you can provide a character vector with length equal to that of ncol(data).
+#' To set a single column's header you should use the title parameter of hot_column().
 #' @param columnHeaderHeight
 #' @param colWidths
 #' @param dragToScroll

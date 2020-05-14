@@ -45,6 +45,11 @@ hot_table(
 )
 }
 \arguments{
+\item{colHeaders}{Accepts T/F to turn colHeaders on or off.
+By default the library has colHeaders turned on and set to the column names of the provided dataframe.
+To set all colHeaders at once you can provide a character vector with length equal to that of ncol(data).
+To set a single column's header you should use the title parameter of hot_column().}
+
 \item{validate_upon_creation}{something to validate the initial data}
 
 \item{...}{passed onto handsontable as table-level settings.
