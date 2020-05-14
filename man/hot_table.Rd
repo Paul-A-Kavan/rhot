@@ -52,9 +52,7 @@ To set a single column's header you should use the title parameter of hot_column
 
 \item{validate_upon_creation}{something to validate the initial data}
 
-\item{...}{passed onto handsontable as table-level settings.
-
-#'}
+\item{...}{passed onto handsontable as table-level settings.}
 }
 \description{
 Set table-level settings.

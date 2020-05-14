@@ -6,7 +6,10 @@ resolve_column_id <- function(hot, column_id) {
   if (is.numeric(column_id))
     if (all(column_id %in% seq_along(hot$x$columns)))
       return(column_id)
-  cnames <- unlist(get_column_setting(hot, 'data'))
+  cnames <- unlist(lapply(hot$x$columns,
+                          function(a) {
+                            a[['data']]
+                          }))
   if (is.character(column_id))
     return(which(cnames %in% column_id))
 

@@ -136,7 +136,6 @@ hot_cell <- function(hot,
 #' @param validate_upon_creation  something to validate the initial data
 #' @param ... passed onto handsontable as table-level settings.
 #'
-#'#'
 #' @export
 hot_table <-
   function(hot,
