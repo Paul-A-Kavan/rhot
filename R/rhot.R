@@ -48,133 +48,14 @@ rhot <- function(elementId,
   }
 
   # there are some very sensible defaults here
-  hot <- hot_table(hot, stretchH = 'all', rowHeaders = TRUE)
+  # hot <- hot_table(hot, rowHeaders = TRUE)
   hot <- hot_menu(hot, menu = FALSE)
 
   return(hot)
 }
 
 
-#' Set column-level settings.
-#'
-#' Pass settings to the handsontable object that are column specific. The function is vectorized over columns and the settings. This means that you can set the same settings for different columns and different settings for different columns in the same call.
-#'
-#' @param hot The Handsontable object created by rhot().
-#' @param columnId Vector to specify which columns for the provided settings. Can be numeric vector of column indexes or character vector of column names.
-#' @param returnType Sets the R-class that will be used to deserialize data back into R. By default these are set by the class of the columns in the data.frame provided to rhot().
-#' @param allowInvalid
-#' @param copyable
-#' @param copyPaste
-#' @param correctFormat
-#' @param dateFormat
-#' @param defaultDate
-#' @param editor
-#' @param filter
-#' @param filteringCaseSensitive
-#' @param label
-#' @param numericFormat
-#' @param placeholder
-#' @param readOnly
-#' @param renderer default options: 'autocomplete', 'checkbox', 'html', 'numeric', 'password', 'text' or custRenderer
-#' @param selectOptions
-#' @param skipColumnOnPaste
-#' @param source
-#' @param strict
-#' @param title
-#' @param trimDropdown
-#' @param trimWhitespace
-#' @param type Character vector defining the type for each column. This is the preferred way of setting the editor, renderer, and validator (ERV) for a column when using predefined column types. To further customize your table, supply the type then override any or all of the three ERV settings.
-#' @param validator Character vector with names of validator to be used for the column. Setting validator explicitly will override the validator that is implied by setting the column type. Handsontable provides 'autocomplete','date','dropdown', 'numeric', 'time' as prebuilt validators. See details for explanation of each. For further customization you can register your own custom validator by using \code{\link{rhot::validator_register_custom}} and then passing that validator's name to this parameter.
-#' @param visibleRows
-#' @param wordWrap
-#' @param ... Additional settings passed to the column object.
-#'
-#'
-#' @details
-#' ## Type, Editor, Renderer, Validator
-#'
-#' ## Validator
-#' ### Standard options
-#' These are the options provided by Handsontable.
-#' autocomplete
-#' date
-#' dropdown
-#' numeric
-#' time
-#' custom validator: see rhot::validator_register_custom()
-#' ### Custom Validator
-#'
-#'
-#'
-#'
-# this sets settigns that pertain to a single column in the column list
-#'
-#' @export
-hot_column <-
-  function(hot,
-           columnId, # null not allowed, if you want whole table then use hot_table
-           returnType = NULL, # this is used for deserializing
-           allowInvalid = NULL,
-           copyable = NULL,
-           copyPaste = NULL,
-           correctFormat = NULL,
-           dateFormat = NULL,
-           defaultDate = NULL,
-           editor = NULL,
-           filter = NULL,
-           filteringCaseSensitive = NULL,
-           label = NULL,
-           numericFormat = NULL,
-           placeholder = NULL,
-           readOnly = NULL,
-           renderer = NULL,
-           selectOptions = NULL,
-           skipColumnOnPaste = NULL,
-           source = NULL,
-           strict = NULL,
-           title = NULL,
-           trimDropdown = NULL,
-           trimWhitespace = NULL,
-           type = NULL,
-           validator = NULL,
-           visibleRows = NULL,
-           wordWrap = NULL,
-           halign = NULL,
-           valign = NULL,
-           ...)
-  {
 
-    # set the varargs in the environment for the function
-    list2env(list(...), environment())
-
-    # there are many arguments and they are all handled the same so..
-    # i capture just the ones that are not null with a clean function call
-    col_sets <- setdiff(
-      # grab the named params that were passed in
-      names(sapply(match.call(expand.dots=TRUE), deparse)[-1]),
-      # exclude params that shouldn't be set in the column object
-      c('hot','columnId','halign','valign')
-    )
-
-    # resolve character column names to their id's
-    col_ids <- resolve_column_id(hot, columnId)
-
-    # now a loop over all the columns supplied
-    # to set the core parameters inside each column entry
-    for( i in seq_along(col_ids) ) {
-      for ( setting in col_sets) {
-        # provided value could be a single value or a character vector
-        new_value <- get_value(value = eval(parse(text = setting)),
-                               position = i)
-        # then set the value in the column object
-        hot$x$columns[[col_ids[i]]][setting] <- list(new_value)
-      }
-
-      # there are also settings that don't go in the column object
-      # hot <- set_alignmentClasses(hot, col_ids[i], i, halign, valign)
-    }
-    return(hot)
-  }
 
 #' Set cell-level settings.
 #'
@@ -309,7 +190,6 @@ hot_table <-
     }
 
     # some settings need to be handled in custom ways
-    # such as validate_upon_creation
     if (!is.null(validate_upon_creation)) {
       #TODO
     }
