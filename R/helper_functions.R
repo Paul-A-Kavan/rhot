@@ -1,39 +1,4 @@
 
-check_colHeaders <- function(z, hot) {
-  # the generic purpose of this check function:
-  generic_error_message <-
-    "colHeaders must be a logical vector of length 1 or a character vector of length ncols(data)"
-
-  # make sure we got a vector
-  if (!is.vector(z)) {
-    stop(generic_error_message)
-  }
-
-  # checks for when user provides logical vector
-  if (class(z) == 'logical') {
-    if (length(z) == 1)
-      return(z)
-    else
-      stop("colHeaders of type logical must be length 1.")
-  }
-
-  # checks for when user provides character vector
-  if (class(z) == 'character') {
-    if (length(z) == length(hot$x$columns))
-      return(z)
-    else
-      stop("colHeaders of type character must have length of ncols(data).")
-  }
-
-  # if neither condition is met then provide generic error
-  stop(generic_error_message)
-}
-
-check_rowHeaders <- function(rowHeaders, hot) {
-  # TODO similar implementation to check_colHeaders, infact, we may be able to make it into one function check_headers
-  rowheaders
-}
-
 resolve_column_id <- function(hot, column_id) {
   # prevent the possibility of iterating over the same column twice
   column_id <- unique(column_id)
@@ -47,43 +12,7 @@ resolve_column_id <- function(hot, column_id) {
 
   # else we give a generic complaint
   stop("column_id must be an integer or character vector indicating columns of the data")
-
-
 }
-
-get_value <- function(value, position) {
-  if (length(value) == 1)
-    return(value)
-  else
-    return(value[position])
-}
-
-get_column_setting <- function(hot, setting, col_id = NULL) {
-  if (!is.null(col_id))
-    return(hot$x$columns[[col_id]][[setting]])
-
-  return(
-    unlist(lapply(hot$x$columns,
-                  function(a) {
-                    a[[setting]]
-                  }))
-  )
-}
-
-# set_column_setting <- function(hot, setting_name, setting_value, columnId, position) {
-#   hot$x$columns[[columnId]][setting_name] <- setting_value
-#   return(hot)
-# }
-#
-# set_table_setting <- function(hot, setting_name, setting_value) {
-#   if (is.null(setting_value))
-#     return(hot)
-#   hot$x[[setting_name]] <- setting_value
-#   return(hot)
-# }
-
-
-
 
 
 set_alignmentClasses <- function(hot, column_id, position, halign, valign) {
@@ -112,9 +41,6 @@ set_alignmentClasses <- function(hot, column_id, position, halign, valign) {
       "Oops, development error. Please report the set_alignmentClasses function to the developer."
     )
   }
-
-
-
 
 columnSorting <- function(indicator = TRUE,
                           sortEmptyCells = TRUE,
