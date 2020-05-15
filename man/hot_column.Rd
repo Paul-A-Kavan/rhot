@@ -9,7 +9,6 @@ hot_column(
   columnId,
   returnType = NULL,
   allowInvalid = NULL,
-  colHeader = NULL,
   colWidth = NULL,
   copyable = NULL,
   copyPaste = NULL,
@@ -47,11 +46,11 @@ hot_column(
 
 \item{returnType}{Sets the R-class that will be used to deserialize data back into R. By default these are set by the class of the columns in the data.frame provided to rhot().}
 
-\item{colHeader}{Length one character vector to set the column's display name. Doesn't alter underlying dataframe column names.}
-
 \item{copyPaste}{Boolean topermit or remove copy and paste action on a column. The Handsontable library defaults this value to TRUE.}
 
 \item{renderer}{default options: 'autocomplete', 'checkbox', 'html', 'numeric', 'password', 'text' or custRenderer}
+
+\item{title}{String to set the column header. Doesn't alter the colnames of the underlying data frame.}
 
 \item{type}{Character vector defining the type for each column. This is the preferred way of setting the editor, renderer, and validator (ERV) for a column when using predefined column types. To further customize your table, supply the type then override any or all of the three ERV settings.}
 

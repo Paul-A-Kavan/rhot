@@ -6,7 +6,6 @@
 #' @param columnId Vector to specify which columns for the provided settings. Can be numeric vector of column indexes or character vector of column names.
 #' @param returnType Sets the R-class that will be used to deserialize data back into R. By default these are set by the class of the columns in the data.frame provided to rhot().
 #' @param allowInvalid
-#' @param colHeader Length one character vector to set the column's display name. Doesn't alter underlying dataframe column names.
 #' @param colWidth
 #' @param copyable
 #' @param copyPaste Boolean topermit or remove copy and paste action on a column. The Handsontable library defaults this value to TRUE.
@@ -25,7 +24,7 @@
 #' @param skipColumnOnPaste
 #' @param source
 #' @param strict
-#' @param title
+#' @param title String to set the column header. Doesn't alter the colnames of the underlying data frame.
 #' @param trimDropdown
 #' @param trimWhitespace
 #' @param type Character vector defining the type for each column. This is the preferred way of setting the editor, renderer, and validator (ERV) for a column when using predefined column types. To further customize your table, supply the type then override any or all of the three ERV settings.
@@ -60,7 +59,6 @@ hot_column <-
            columnId, # null not allowed, if you want whole table then use hot_table
            returnType = NULL, # this is used for deserializing
            allowInvalid = NULL,
-           colHeader = NULL,
            colWidth = NULL,
            copyable = NULL,
            copyPaste = NULL,
@@ -104,9 +102,6 @@ hot_column <-
 
       if(!is.null(allowInvalid))
         hot$x$columns[[col_ids[i]]]['allowInvalid'] <- list(allowInvalid)
-
-      if(!is.null(colHeader))
-        hot$x$columns[[col_ids[i]]]['colHeaders'] <- list(colHeader)
 
       if(!is.null(colWidth))
         hot$x$columns[[col_ids[i]]]['colWidths'] <- list(colWidth)

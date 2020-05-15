@@ -1,4 +1,11 @@
 
+set_all_columns <- function(hot, setting, value){
+  for (i in 1:hot$x$rinfo$ncol) {
+    hot$x$columns[[i]][setting] <- value[i]
+  }
+  hot
+}
+
 resolve_column_id <- function(hot, column_id) {
   # prevent the possibility of iterating over the same column twice
   column_id <- unique(column_id)

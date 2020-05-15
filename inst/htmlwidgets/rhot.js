@@ -4,7 +4,8 @@ HTMLWidgets.widget({
 
 
   factory: function(el, width, height) {
-    // create the afterChange hook function to be registered further down
+
+        // create the afterChange hook function to be registered further down
     var afterChange_function = function(changes, source) {
           if( !HTMLWidgets.shinyMode ) return;
           var robj = {'changes':changes, 'source':source};
@@ -16,7 +17,6 @@ HTMLWidgets.widget({
           var robj = {'changes':changes, 'source':source};
           Shiny.onInputChange(el.id + '_afterChange', robj);
         };
-
 
 
     // #### RENDERING FUNCTION ####

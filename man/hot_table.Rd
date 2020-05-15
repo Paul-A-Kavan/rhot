@@ -10,7 +10,7 @@ hot_table(
   autoRowSize = NULL,
   autoWrapCol = NULL,
   autoWrapRow = NULL,
-  colHeaders = NULL,
+  colHeaders = TRUE,
   columnHeaderHeight = NULL,
   colWidths = NULL,
   dragToScroll = NULL,
@@ -39,16 +39,19 @@ hot_table(
   selectionMode = NULL,
   stretchH = "none",
   tabMoves = NULL,
+  titles = NULL,
   undo = NULL,
   validate_upon_creation = NULL,
   ...
 )
 }
 \arguments{
-\item{colHeaders}{Accepts T/F to turn colHeaders on or off.
-By default the library has colHeaders turned on and set to the column names of the provided dataframe.
-To set all colHeaders at once you can provide a character vector with length equal to that of ncol(data).
+\item{colHeaders}{Logical, by default colHeaders is set to TRUE and
+rhot sets the column headers using the colnames of the provided dataframe.
+To set the column headers you should use the title parameter.
 To set a single column's header you should use the title parameter of hot_column().}
+
+\item{titles}{Set all column titles at once. Must be character vector of length one or ncol(data).}
 
 \item{validate_upon_creation}{something to validate the initial data}
 

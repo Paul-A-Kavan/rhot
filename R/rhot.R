@@ -31,6 +31,9 @@ rhot <- function(elementId,
   x$sizeInfo$height = height
   x$sizeInfo$overflow = overflow
 
+  x$rinfo$ncol <- ncol(data)
+  x$rinfo$nrow <- nrow(data)
+
   # create the widget binding
   hot <- htmlwidgets::createWidget(name = 'rhot',
                                    x,
@@ -49,7 +52,8 @@ rhot <- function(elementId,
 
   # there are some very sensible defaults here
   # hot <- hot_table(hot, rowHeaders = TRUE)
-  hot <- hot_menu(hot, menu = FALSE)
+  hot <- hot_menu(hot, menu = FALSE) %>%
+    hot_table(titles = cnames)
 
   return(hot)
 }
@@ -100,9 +104,9 @@ hot_cell <- function(hot,
 #' @param autoRowSize
 #' @param autoWrapCol
 #' @param autoWrapRow
-#' @param colHeaders Accepts T/F to turn colHeaders on or off.
-#' By default the library has colHeaders turned on and set to the column names of the provided dataframe.
-#' To set all colHeaders at once you can provide a character vector with length equal to that of ncol(data).
+#' @param colHeaders Logical, by default colHeaders is set to TRUE and
+#' rhot sets the column headers using the colnames of the provided dataframe.
+#' To set the column headers you should use the title parameter.
 #' To set a single column's header you should use the title parameter of hot_column().
 #' @param columnHeaderHeight
 #' @param colWidths
@@ -132,6 +136,7 @@ hot_cell <- function(hot,
 #' @param selectionMode
 #' @param stretchH
 #' @param tabMoves
+#' @param titles Set all column titles at once. Must be character vector of length one or ncol(data).
 #' @param undo
 #' @param validate_upon_creation  something to validate the initial data
 #' @param ... passed onto handsontable as table-level settings.
@@ -143,7 +148,7 @@ hot_table <-
            autoRowSize = NULL,
            autoWrapCol = NULL,
            autoWrapRow = NULL,
-           colHeaders = NULL,
+           colHeaders = TRUE,
            columnHeaderHeight = NULL,
            colWidths = NULL,
            dragToScroll = NULL,
@@ -172,6 +177,7 @@ hot_table <-
            selectionMode = NULL,
            stretchH = 'none',
            tabMoves = NULL,
+           titles = NULL,
            undo = NULL,
            validate_upon_creation = NULL, #? something to validate the initial data
            ...)
@@ -194,6 +200,10 @@ hot_table <-
     # some settings need to be handled in custom ways
     if (!is.null(validate_upon_creation)) {
       #TODO
+    }
+
+    if (!is.null(titles)) {
+      hot <- set_all_columns(hot = hot, setting = 'title', value = titles)
     }
 
     return(hot)
