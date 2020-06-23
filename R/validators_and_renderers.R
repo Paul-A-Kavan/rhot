@@ -33,7 +33,8 @@ register_validator_numeric <- function(hot,
       }",
       .open = "{*{", .close = "}*}")
   validator_javascript <- glue::glue(
-    "(function(Handsontable){
+    "console.log('registering validator now');
+      (function(Handsontable){
         {*{jsFunction}*}
       Handsontable.validators.registerValidator(
           '{*{name}*}', customValidator);

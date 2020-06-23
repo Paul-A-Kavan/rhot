@@ -1,6 +1,6 @@
 
 set_all_columns <- function(hot, setting, value){
-  for (i in 1:hot$x$rinfo$ncol) {
+  for (i in 1:hot$x$rInfo$ncol) {
     hot$x$columns[[i]][setting] <- value[i]
   }
   hot

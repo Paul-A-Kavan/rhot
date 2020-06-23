@@ -16,23 +16,26 @@ rhot <- function(elementId,
                  height = 'auto',
                  overflow = 'hidden') {
 
-  # create the list of basic table settings that will be passed to rhot.js
-  x <- list()
   # store this info for use further down
   cnames <- colnames(data)
   rtypes <- unname(unlist(lapply(data, class)))
 
+  # create the list of basic table settings that will be passed to rhot.js
+  x <- list()
   # now we start adding things to our data binding for the js library
   x$data = jsonlite::toJSON(data, dataframe = 'rows')
   x$columns <- vector("list", length = ncol(data))
   x$cell <- list()
+  x$sizeInfo <- list()
+  x$rInfo <- list()
+  x$params <- list()
 
-  x$sizeInfo$width = width
-  x$sizeInfo$height = height
-  x$sizeInfo$overflow = overflow
+  x$sizeInfo$width <- width
+  x$sizeInfo$height <- height
+  x$sizeInfo$overflow <- overflow
 
-  x$rinfo$ncol <- ncol(data)
-  x$rinfo$nrow <- nrow(data)
+  x$rInfo$ncol <- ncol(data)
+  x$rInfo$nrow <- nrow(data)
 
   # create the widget binding
   hot <- htmlwidgets::createWidget(name = 'rhot',
@@ -49,12 +52,31 @@ rhot <- function(elementId,
     hot$x$columns[[i]]$type = 'text'
     hot$x$columns[[i]]$returnType = rtypes[i]
   }
-
   # there are some very sensible defaults here
   # hot <- hot_table(hot, rowHeaders = TRUE)
   hot <- hot_menu(hot, menu = FALSE) %>%
-    hot_table(titles = cnames)
-
+    hot_table(titles = cnames) %>%
+    hot_listener(
+      changed_cell_only = glue::glue(
+        "Handsontable.hooks.add('afterChange',",
+        "function(changes, source) {",
+        "if( !HTMLWidgets.shinyMode ) return;",
+        "Shiny.onInputChange('table1_cellChange:rhot_deserializer1', ",
+        "{'changes':changes, 'source':source});",
+        "})",
+        .open = '{*{',
+        .close = '}*}'
+      ),
+      ful_data_set = glue::glue(
+        "Handsontable.hooks.add('afterChange',",
+        "function(changes, source) {",
+        "if( !HTMLWidgets.shinyMode ) return;",
+        "Shiny.onInputChange('table1_data', this.getData());",
+        " })",
+        .open = '{*{',
+        .close = '}*}'
+      )
+    )
   return(hot)
 }
 
@@ -182,6 +204,7 @@ hot_table <-
            validate_upon_creation = NULL, #? something to validate the initial data
            ...)
   {
+
     # set the varargs in the environment for the function
     list2env(list(...), environment())
 
@@ -290,3 +313,50 @@ renderRhot <- function(expr,
   } # force quoted
   htmlwidgets::shinyRenderWidget(expr, rhotOutput, env, quoted = TRUE)
 }
+
+#' Set event listeners on the hot object
+#'
+#' @param hot
+#' @param ... The event listeners.
+#'
+#' Pass event listeners to the hot library. Name the parameter as the listener you are setting.
+#' Each parameter's content is the event listener function as a string.
+#'
+#' There are pre-set event handlers. This function is intended to allow the user to add more event
+#' listeners but if you really want to turn off a pre-set handler then pass that listener as
+#' an empty string and it'll be overwritten.
+#' Default handlers: afterChange
+#'
+#' @export
+hot_listener <- function(hot, ...){
+  args_list <- list(...)
+  # make sure the variable params are all named so that we can access them in the hot object
+  if ('' %in% names(args_list)) stop('All arguments must be named.')
+
+  names(args_list) <- paste0('listener_', names(args_list))
+  res <- lapply(args_list, htmlwidgets::JS)
+  hot$x <- append(hot$x, res)
+
+  hot
+}
+
+
+#' Attach data to the hot object
+#'
+#' @param hot
+#'
+#' @export
+hot_attach <- function(hot, ...){
+  args_list <- list(...)
+  # make sure the variable params are all named so that we can access them in the hot object
+  if ('' %in% names(args_list)) stop('All arguments must be named.')
+
+  hot$x$params[[names(args_list)]] <- jsonlite::toJSON(args_list)
+
+  hot
+}
+
+
+
+
+

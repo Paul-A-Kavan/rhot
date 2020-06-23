@@ -1,40 +1,27 @@
+console.log('kicking off the script');
+
 HTMLWidgets.widget({
   name: 'rhot',
   type: 'output',
-
-
   factory: function(el, width, height) {
 
-        // create the afterChange hook function to be registered further down
-    var afterChange_function = function(changes, source) {
-          if( !HTMLWidgets.shinyMode ) return;
-          var robj = {'changes':changes, 'source':source};
-          Shiny.onInputChange(el.id + '_afterChange', robj);
-        };
-    // the blank hook function also
-    var myhook_function = function(changes, source) {
-          if( !HTMLWidgets.shinyMode ) return;
-          var robj = {'changes':changes, 'source':source};
-          Shiny.onInputChange(el.id + '_afterChange', robj);
-        };
-
+  console.log('beginning of the factory function')
 
     // #### RENDERING FUNCTION ####
     renFunc = function(x) {
+      console.log(x);
       // use the parent element to control widget sizing
-      // but don't pass theses on to the constructor
+      // but don't pass these on to the constructor
       el.style.overflow = x.sizeInfo.overflow;
       el.style.height = x.sizeInfo.height;
       el.style.width = x.sizeInfo.width;
-      delete x.sizeInfo;
+
 
       el.hot = new Handsontable(el, x);
 
-
-      Handsontable.hooks.add('afterChange', afterChange_function, el.hot);
-      Handsontable.hooks.add('myhook', myhook_function, el.hot);
-
-      //el.hot.render();
+      el.hot.params = x.params;
+      console.log(el.hot);
+      el.hot.render();
     };
 
     // resizing function
