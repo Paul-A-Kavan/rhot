@@ -17,6 +17,8 @@ HTMLWidgets.widget({
       el.style.width = x.sizeInfo.width;
 
 
+      el.params = x.params;
+
       el.hot = new Handsontable(el, x);
 
       el.hot.params = x.params;
