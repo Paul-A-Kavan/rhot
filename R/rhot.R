@@ -1,3 +1,34 @@
+
+#' Shiny bindings for rhot
+#'
+#' Output and render functions for using rhot within Shiny
+#' applications and interactive Rmd documents.
+#'
+#' @param outputId output variable to read from
+#' @param width,height Must be a valid CSS unit (like \code{'100\%'},
+#'   \code{'400px'}, \code{'auto'}) or a number, which will be coerced to a
+#'   string and have \code{'px'} appended.
+#' @param expr An expression that generates a rhot
+#' @param env The environment in which to evaluate \code{expr}.
+#' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
+#'   is useful if you want to save an expression in a variable.
+#'
+#' @name rhot-shiny
+#'
+#' @export
+rhotOutput <- function(outputId, width = '100%', height = '400px') {
+  htmlwidgets::shinyWidgetOutput(outputId, 'rhot', width, height, package = 'rhot')
+}
+
+#' @rdname rhot-shiny
+#' @export
+renderRhot <- function(expr, env = parent.frame(), quoted = FALSE) {
+  if (!quoted) {
+    expr <- substitute(expr)
+  } # force quoted
+  htmlwidgets::shinyRenderWidget(expr, rhotOutput, env, quoted = TRUE)
+}
+
 #' <Add Title>
 #'
 #' <Add Description>
@@ -20,15 +51,18 @@ rhot <- function(elementId,
   cnames <- colnames(data)
   rtypes <- unname(unlist(lapply(data, class)))
 
-  # create the list of basic table settings that will be passed to rhot.js
+  # create the list of basic table info that will be passed to rhot.js
   x <- list()
-  # now we start adding things to our data binding for the js library
   x$data = jsonlite::toJSON(data, dataframe = 'rows')
   x$columns <- vector("list", length = ncol(data))
   x$cell <- list()
   x$sizeInfo <- list()
   x$rInfo <- list()
   x$params <- list()
+  x$renderers <- list()
+  x$validators <- list()
+  x$editors <- list()
+  x$hooks <- list()
 
   x$sizeInfo$width <- width
   x$sizeInfo$height <- height
@@ -45,40 +79,23 @@ rhot <- function(elementId,
                                    package = 'rhot',
                                    elementId = elementId)
 
-  # preset all the column types to text with no other defaults
+  # make a namespace function so renderers, editors, validators apply to their respective tables only
+  hot$ns <- function(str){paste0(elementId, "-", str)}
+
+  # some rhot defaults
   for(i in 1:ncol(data)){
     hot$x$columns[[i]]$data = cnames[i]
-    # hot$x$columns[[i]]$title = cnames[i]
     hot$x$columns[[i]]$type = 'text'
     hot$x$columns[[i]]$returnType = rtypes[i]
   }
-  # there are some very sensible defaults here
-  # hot <- hot_table(hot, rowHeaders = TRUE)
-  hot <- hot_menu(hot, menu = FALSE) %>%
-    hot_table(titles = cnames) %>%
-    hot_listener(
-      changed_cell_only = glue::glue(
-        "Handsontable.hooks.add('afterChange',",
-        "function(changes, source) {",
-        "if( !HTMLWidgets.shinyMode ) return;",
-        "Shiny.onInputChange('table1_cellChange:rhot_deserializer1', ",
-        "{'changes':changes, 'source':source});",
-        "})",
-        .open = '{*{',
-        .close = '}*}'
-      ),
-      ful_data_set = glue::glue(
-        "Handsontable.hooks.add('afterChange',",
-        "function(changes, source) {",
-        "if( !HTMLWidgets.shinyMode ) return;",
-        "Shiny.onInputChange('table1_data', this.getData());",
-        " })",
-        .open = '{*{',
-        .close = '}*}'
-      )
-    )
+
+  hot <- hot %>%
+    hot_menu(menu = FALSE) %>%
+    hot_table(titles = cnames)
+
   return(hot)
 }
+
 
 
 
@@ -265,77 +282,82 @@ hot_menu <-
 #'
 #'#'
 #' @export
-hot_style <-
-  function(
-    hot,
-    someClassSettings = NULL)
-  {
-    # TODO write this function and identify arguments from documnetation
-    # figure out weird custom borders
-    # add any css to be handled in rhot.js
+hot_style <- function(hot, someClassSettings = NULL) {
+  # TODO write this function and identify arguments from documnetation
+  # figure out weird custom borders
+  # add any css to be handled in rhot.js
 
-    return(hot)
-  }
-
-
-#' Shiny bindings for rhot
-#'
-#' Output and render functions for using rhot within Shiny
-#' applications and interactive Rmd documents.
-#'
-#' @param outputId output variable to read from
-#' @param width,height Must be a valid CSS unit (like \code{'100\%'},
-#'   \code{'400px'}, \code{'auto'}) or a number, which will be coerced to a
-#'   string and have \code{'px'} appended.
-#' @param expr An expression that generates a rhot
-#' @param env The environment in which to evaluate \code{expr}.
-#' @param quoted Is \code{expr} a quoted expression (with \code{quote()})? This
-#'   is useful if you want to save an expression in a variable.
-#'
-#' @name rhot-shiny
-#'
-#' @export
-rhotOutput <-
-  function(outputId,
-           width = '100%',
-           height = '400px')
-  {
-    htmlwidgets::shinyWidgetOutput(outputId, 'rhot', width, height, package = 'rhot')
-  }
-
-#' @rdname rhot-shiny
-#' @export
-renderRhot <- function(expr,
-                       env = parent.frame(),
-                       quoted = FALSE) {
-  if (!quoted) {
-    expr <- substitute(expr)
-  } # force quoted
-  htmlwidgets::shinyRenderWidget(expr, rhotOutput, env, quoted = TRUE)
+  return(hot)
 }
+
+
+
+
+#' Register a custom cell renderer
+#'
+#' @param hot
+#' @param name Name your renderer.
+#' @param jsFunction Your javascript renderer function passed as a string.
+#'
+#' TODO Add details for what is expected of a renderer function.
+#' @export
+hot_register_renderer <- function(hot, name, jsFunction) {
+  new_index <- 1 + length(hot$x$renderers)
+  new_entry <- list(name = hot$ns(name), renderer = jsFunction)
+
+  hot$x$renderers[[new_index]] <- new_entry
+
+  return(hot)
+}
+
+#' Register a custom cell validator
+#'
+#' @param hot
+#' @param name Name your validator.
+#' @param jsFunction Your javascript validator function passed as a string.
+#'
+#' TODO Add details for what is expected of a validator function.
+#' @export
+hot_register_validator <- function(hot, name, jsFunction) {
+  new_index <- 1 + length(hot$x$validators)
+  new_entry <- list(name = hot$ns(name), validator = jsFunction)
+
+  hot$x$validators[[new_index]] <- new_entry
+
+  return(hot)
+}
+
+#' Register a custom editor with Handsontable
+#'
+#' @param hot
+#' @param name Name your editor
+#' @param jsFunction Your javascript editor function passed as a string.
+#'
+#' TODO Add details for what is expected of a validator function.
+#' @export
+hot_register_editor <- function(hot, name, jsFunction) {
+  new_index <- 1 + length(hot$x$editors)
+  new_entry <- list(name = hot$ns(name), editor = jsFunction)
+
+  hot$x$editors[[new_index]] <- new_entry
+
+  return(hot)
+}
+
 
 #' Set event listeners on the hot object
 #'
 #' @param hot
-#' @param ... The event listeners.
-#'
-#' Pass event listeners to the hot library. Name the parameter as the listener you are setting.
-#' Each parameter's content is the event listener function as a string.
-#'
-#' There are pre-set event handlers. This function is intended to allow the user to add more event
-#' listeners but if you really want to turn off a pre-set handler then pass that listener as
-#' an empty string and it'll be overwritten.
-#' Default handlers: afterChange
+#' @param hook The name of the handsontable hook you're attaching the listener to.
+#' @param jsFunction Your javascript function passed as a string.
 #'
 #' @export
-hot_listener <- function(hot, ...){
-  args_list <- list(...)
-  # make sure the variable params are all named so that we can access them in the hot object
-  if ('' %in% names(args_list)) stop('All arguments must be named.')
+hot_add_listener <- function(hot, hook, jsFunction) {
 
-  names(args_list) <- paste0('listener_', names(args_list))
-  res <- lapply(args_list, htmlwidgets::JS)
-  hot$x <- append(hot$x, res)
+  new_index <- 1 + length(hot$x$hooks)
+  new_entry <- list(key = hook, callback = jsFunction)
+
+  hot$x$hooks[[new_index]] <- new_entry
 
   hot
 }
@@ -355,8 +377,5 @@ hot_attach <- function(hot, ...){
 
   hot
 }
-
-
-
 
 
