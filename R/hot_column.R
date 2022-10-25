@@ -122,7 +122,7 @@ hot_column <-
         hot$x$columns[[col_ids[i]]]['defaultDate'] <- list(defaultDate)
 
       if(!is.null(editor))
-        hot$x$columns[[col_ids[i]]]['editor'] <- list(editor)
+        hot$x$columns[[col_ids[i]]]['editor'] <- list(hot$ns(editor))
 
       if(!is.null(filter))
         hot$x$columns[[col_ids[i]]]['filter'] <- list(filter)
@@ -143,7 +143,7 @@ hot_column <-
         hot$x$columns[[col_ids[i]]]['readOnly'] <- list(readOnly)
 
       if(!is.null(renderer))
-        hot$x$columns[[col_ids[i]]]['renderer'] <- list(renderer)
+        hot$x$columns[[col_ids[i]]]['renderer'] <- list(hot$ns(renderer))
 
       if(!is.null(selectOptions))
         hot$x$columns[[col_ids[i]]]['selectOptions'] <- list(selectOptions)
@@ -170,7 +170,7 @@ hot_column <-
         hot$x$columns[[col_ids[i]]]['type'] <- list(type)
 
       if(!is.null(validator))
-        hot$x$columns[[col_ids[i]]]['validator'] <- list(validator)
+        hot$x$columns[[col_ids[i]]]['validator'] <- list(hot$ns(validator))
 
       if(!is.null(visibleRows))
         hot$x$columns[[col_ids[i]]]['visibleRows'] <- list(visibleRows)
