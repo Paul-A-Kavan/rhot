@@ -9,11 +9,10 @@ HTMLWidgets.widget({
       el.style.width = x.sizeInfo.width;
       el.style.height = x.sizeInfo.height;
 
-      el.hot = new Handsontable(el, x);
-
       el.params = x.params;
       //el.hot.params = x.params;
 
+      // Register the cell functions with Handsontable core before instantiating the hot object
       // Register renderers
       x.renderers.forEach(
         function(currentElement){
@@ -41,7 +40,11 @@ HTMLWidgets.widget({
           );
         }
       );
-      // Register hook listeners
+
+      //instantiate the hot object
+      el.hot = new Handsontable(el, x);
+
+      // Register hook listeners after the table is instantiated
       x.hooks.forEach(
         function(currentElement) {
           el.hot.addHook(
@@ -50,7 +53,6 @@ HTMLWidgets.widget({
           );
         }
       );
-
 
       el.hot.render();
     };
