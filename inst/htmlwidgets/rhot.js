@@ -9,8 +9,7 @@ HTMLWidgets.widget({
       el.style.width = x.sizeInfo.width;
       el.style.height = x.sizeInfo.height;
 
-      el.params = x.params;
-      //el.hot.params = x.params;
+      el.rParams = x.rParams;
 
       // Register the cell functions with Handsontable core before instantiating the hot object
       // Register renderers
@@ -40,12 +39,21 @@ HTMLWidgets.widget({
           );
         }
       );
+     // Register global hook listeners before the table is instantiated
+      x.hooksGlobal.forEach(
+        function(currentElement) {
+          Handsontable.hooks.add(
+            currentElement.key,
+            new Function("return (" + currentElement.callback +")")()
+          );
+        }
+      );
 
       //instantiate the hot object
       el.hot = new Handsontable(el, x);
 
-      // Register hook listeners after the table is instantiated
-      x.hooks.forEach(
+      // Register local hook listeners after the table is instantiated
+      x.hooksLocal.forEach(
         function(currentElement) {
           el.hot.addHook(
             currentElement.key,

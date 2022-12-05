@@ -46,34 +46,26 @@ rhot <- function(elementId,
                  width = 'auto', # TODO? need to make a smart interpreter for these
                  height = 'auto',
                  overflow = 'hidden') {
-
-  # store this info for use further down
-  cnames <- colnames(data)
-  rtypes <- unname(unlist(lapply(data, class)))
-
   # create the list of basic table info that will be passed to rhot.js
   x <- list()
   x$data = jsonlite::toJSON(data, dataframe = 'rows')
   x$columns <- vector("list", length = ncol(data))
   x$cell <- list()
   x$sizeInfo <- list()
-  x$rInfo <- list()
-  x$params <- list()
+  x$rParams <- list() # anything from r that the user wants attached to the hot root element
   x$renderers <- list()
   x$validators <- list()
   x$editors <- list()
-  x$hooks <- list()
+  x$hooksLocal <- list()
+  x$hooksGlobal <- list() # use these carefully since they will apply to all tables on the web page
 
   x$sizeInfo$width <- width
   x$sizeInfo$height <- height
   x$sizeInfo$overflow <- overflow
 
-  x$rInfo$ncol <- ncol(data)
-  x$rInfo$nrow <- nrow(data)
-
   # create the widget binding
   hot <- htmlwidgets::createWidget(name = 'rhot',
-                                   x,
+                                   x = x,
                                    width = width,
                                    height = height,
                                    package = 'rhot',
@@ -83,15 +75,21 @@ rhot <- function(elementId,
   hot$ns <- function(str){paste0(elementId, "-", str)}
 
   # some rhot defaults
+  cnames <- colnames(data)
+  rtypes <- unname(unlist(lapply(data, class)))
   for(i in 1:ncol(data)){
+    # set values that handsontable constructor is expecting
     hot$x$columns[[i]]$data = cnames[i]
+    hot$x$columns[[i]]$title = cnames[i]
     hot$x$columns[[i]]$type = 'text'
-    hot$x$columns[[i]]$returnType = rtypes[i]
+
+    # set values that handsontable does not expect. but these are things used by the r htmlwidgets wrapper
+    hot$x$columns[[i]]$R_type = rtypes[i]
   }
 
+  # default to no menu
   hot <- hot %>%
-    hot_menu(menu = FALSE) %>%
-    hot_table(titles = cnames)
+    hot_menu(menu = FALSE)
 
   return(hot)
 }
@@ -345,22 +343,6 @@ hot_register_editor <- function(hot, name, jsFunction) {
 }
 
 
-#' Set event listeners on the hot object
-#'
-#' @param hot
-#' @param hook The name of the handsontable hook you're attaching the listener to.
-#' @param jsFunction Your javascript function passed as a string.
-#'
-#' @export
-hot_add_listener <- function(hot, hook, jsFunction) {
-
-  new_index <- 1 + length(hot$x$hooks)
-  new_entry <- list(key = hook, callback = jsFunction)
-
-  hot$x$hooks[[new_index]] <- new_entry
-
-  hot
-}
 
 
 #' Attach data to the hot object
