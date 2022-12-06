@@ -6,16 +6,16 @@ listener_jsFunction_data <- "function(changes, source){
         columns = this.getSettings().columns;
         cnames = columns.map(x=>x.data);
         rtypes = columns.map(x=>x.R_type);
-        data = {};
+        data = [];
         for(c in columns){
-          data[cnames[c]] = this.getDataAtProp(cnames[c]);
+          data.push(this.getDataAtProp(cnames[c]));
         }
 
         var result = {
-          'data': data,
-          'rtypes': rtypes
+          'cnames': cnames,
+          'rtypes': rtypes,
+          'data': data
         }
-
         Shiny.onInputChange(this.rootElement.id + '_data:rhot.returnDataDeserializer', result);
     }"
 
@@ -23,7 +23,7 @@ listener_jsFunction_data <- "function(changes, source){
 #' Turn on predefined hook listeners
 #'
 #' @export
-hot_listener <- function(hot, data = FALSE, selected = FALSE){
+hot_listeners <- function(hot, data = FALSE, selected = FALSE){
   if(data){
     hot <- hot_add_listener(
       hot,

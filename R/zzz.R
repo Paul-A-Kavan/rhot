@@ -21,16 +21,18 @@
                                 force = TRUE )
     shiny::registerInputHandler("rhot.returnDataDeserializer",
                                 function(x, session, inputName) {
-                                  cnames <- names(x$data)
-                                  rtypes <- unlist(x$rtype)
-                                  data <- lapply(x$data, unlist)
+                                  cnames <- as.character(x$cnames)
+                                  rtypes <- as.character(x$rtypes)
+                                  data <- lapply(x$data, as.character)
 
+                                  result <- list()
                                   for( ind in seq_along(cnames) ){
                                     suppressWarnings(
-                                      data[[ind]] <- as.vector(data[[ind]], rtypes[ind])
+                                      new_column <- as.vector(data[[ind]], rtypes[ind])
                                     )
+                                    result[[cnames[ind]]] <- new_column
                                   }
-                                  return(as.data.frame(data))
+                                  return(as.data.frame(result, check.names = FALSE))
                                 },
                                 force = TRUE )
   }, error = function(err) {})
