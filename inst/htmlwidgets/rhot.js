@@ -35,7 +35,8 @@ HTMLWidgets.widget({
         function(currentElement){
           Handsontable.editors.registerEditor(
             currentElement.name,
-            new Function("return (" + currentElement.editor +")")()
+            // by using a nested function we can make the r user's experience for editors more similar to the validators and renderers
+            new Function("return (" + currentElement.editor + "(Handsontable) )")(Handsontable)
           );
         }
       );
